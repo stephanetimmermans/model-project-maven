@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.springframework.project.maven</groupId>
+	<artifactId>spring-project</artifactId>
+	<version>1.0.0.BUILD-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>Spring Project (Maven)</name>
+	<description>Demonstrates conventional use of a root POM in a Maven-built Spring project</description>
+	<url>http://github.com/cbeams/spring-project</url>
+	<licenses>
+		<license>
+			<name>Apache 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+	<scm>
+		<url>http://github.com/cbeams/spring-project</url>
+		<connection>scm:git:git://github.com/cbeams/spring-project.git</connection>
+		<developerConnection>scm:git:git://github.com/cbeams/spring-project.git</developerConnection>
+	</scm>
+	<developers>
+		<developer>
+			<id>cbeams</id>
+			<name>Chris Beams</name>
+			<email>cbeams@vmware.com</email>
+		</developer>
+	</developers>
+	<modules>
+		<module>spring-project-parent</module>
+		<module>spring-project-core</module>
+		<module>spring-project-aj</module>
+	</modules>
+	<properties>
+		<project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<aggregate>true</aggregate>
+				</configuration>
+				<executions>
+					<execution>
+						<id>aggregate-jar</id>
+						<goals>
+							<goal>aggregate-jar</goal>
+						</goals>
+						<phase>package</phase>
+						<configuration>
+							<breakiterator>true</breakiterator>
+							<links>
+								<link>http://download.oracle.com/javase/6/docs/api/</link>
+							</links>
+							<excludePackageNames>test.*:*.example:*.sample</excludePackageNames>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.agilejava.docbkx</groupId>
+				<artifactId>docbkx-maven-plugin</artifactId>
+				<version>2.0.8</version>
+				<executions>
+					<execution>
+						<id>single-page</id>
+						<goals>
+							<goal>generate-html</goal>
+						</goals>
+						<configuration>
+							<htmlCustomization>${basedir}/src/docbkx/resources/xsl/html.xsl</htmlCustomization>
+							<postProcess>
+								<move todir="${basedir}/target/site/reference/html-single">
+									<fileset dir="${basedir}/target/docbkx/html">
+										<include name="index.html" />
+									</fileset>
+								</move>
+								<copy todir="${basedir}/target/site/reference/html-single">
+									<fileset dir="${basedir}/src/docbkx/resources">
+										<include name="**/*.css" />
+										<include name="**/*.png" />
+										<include name="**/*.gif" />
+										<include name="**/*.jpg" />
+									</fileset>
+								</copy>
+								<copy todir="${basedir}/target/site/reference/html-single">
+									<fileset dir="${basedir}/src/site/docbook/reference">
+										<include name="**/*.png" />
+										<include name="**/*.gif" />
+										<include name="**/*.jpg" />
+									</fileset>
+								</copy>
+							</postProcess>
+						</configuration>
+						<phase>pre-site</phase>
+					</execution>
+					<execution>
+						<id>single-pdf</id>
+						<goals>
+							<goal>generate-pdf</goal>
+						</goals>
+						<configuration>
+							<imgSrcPath>src/site/docbook/reference/</imgSrcPath>
+							<admonGraphicsPath>src/docbkx/resources/images/</admonGraphicsPath>
+							<postProcess>
+								<copy file="${basedir}/target/docbkx/pdf/index.pdf" tofile="${basedir}/target/site/reference/pdf/${project.artifactId}-reference.pdf" failonerror="false" />
+							</postProcess>
+						</configuration>
+						<phase>pre-site</phase>
+					</execution>
+					<execution>
+						<id>multi-page</id>
+						<goals>
+							<goal>generate-html</goal>
+						</goals>
+						<configuration>
+							<chunkedOutput>true</chunkedOutput>
+							<htmlCustomization>${basedir}/src/docbkx/resources/xsl/html_chunk.xsl</htmlCustomization>
+							<postProcess>
+								<move todir="${basedir}/target/site/reference">
+									<fileset dir="${basedir}/target/docbkx">
+										<include name="**/*.html" />
+									</fileset>
+								</move>
+								<copy todir="${basedir}/target/site/reference/html">
+									<fileset dir="${basedir}/src/docbkx/resources">
+										<include name="**/*.css" />
+										<include name="**/*.png" />
+										<include name="**/*.gif" />
+										<include name="**/*.jpg" />
+									</fileset>
+								</copy>
+								<copy todir="${basedir}/target/site/reference/html">
+									<fileset dir="${basedir}/src/site/docbook/reference">
+										<include name="**/*.png" />
+										<include name="**/*.gif" />
+										<include name="**/*.jpg" />
+									</fileset>
+								</copy>
+							</postProcess>
+						</configuration>
+						<phase>pre-site</phase>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.docbook</groupId>
+						<artifactId>docbook-xml</artifactId>
+						<version>4.4</version>
+						<scope>runtime</scope>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.xmlgraphics</groupId>
+						<artifactId>fop</artifactId>
+						<version>0.93</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<includes>index.xml</includes>
+					<chunkedOutput>false</chunkedOutput>
+					<draftWatermarkImage />
+					<htmlStylesheet>css/html.css</htmlStylesheet>
+					<sourceDirectory>${basedir}/src/site/docbook/reference</sourceDirectory>
+					<foCustomization>${basedir}/src/docbkx/resources/xsl/fopdf.xsl</foCustomization>
+					<xincludeSupported>true</xincludeSupported>
+					<entities>
+						<entity>
+							<name>version</name>
+							<value>${project.version}</value>
+						</entity>
+					</entities>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<inherited>false</inherited>
+				<version>2.2.1</version>
+				<executions>
+					<execution>
+						<id>zip-files</id>
+						<inherited>false</inherited>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>src/assembly/docs.xml</descriptor>
+								<descriptor>src/assembly/dist.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

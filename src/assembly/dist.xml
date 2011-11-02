@@ -1,0 +1,37 @@
+<assembly>
+	<id>dist</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<componentDescriptors>
+		<componentDescriptor>src/assembly/docs-component.xml</componentDescriptor>
+	</componentDescriptors>
+	<includeBaseDirectory>true</includeBaseDirectory>
+	<moduleSets>
+		<moduleSet>
+			<includes>
+				<include>
+					org.springframework.project.maven:spring-project-parent
+				</include>
+				<include>
+					org.springframework.project.maven:spring-project-core
+				</include>
+				<include>
+					org.springframework.project.maven:spring-project-aj
+				</include>
+			</includes>
+			<sources>
+				<includeModuleDirectory>false</includeModuleDirectory>
+				<fileSets>
+					<fileSet>
+						<directory>target</directory>
+						<outputDirectory>libs</outputDirectory>
+						<includes>
+							<include>*.jar</include>
+						</includes>
+					</fileSet>
+				</fileSets>
+			</sources>
+		</moduleSet>
+	</moduleSets>
+</assembly>

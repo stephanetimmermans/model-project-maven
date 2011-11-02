@@ -1,0 +1,10 @@
+<assembly>
+	<id>docs</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<componentDescriptors>
+		<componentDescriptor>src/assembly/docs-component.xml</componentDescriptor>
+	</componentDescriptors>
+	<includeBaseDirectory>true</includeBaseDirectory>
+</assembly>
